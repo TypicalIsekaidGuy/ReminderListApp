@@ -1,5 +1,7 @@
 # ReminderListApp
 My first MVVM and MVI app! 
-This is an app with basic design black and white design and basic 
-architecure and itself app is just a workpiece for new app
-with notification and better design
+
+**In this app i tried several parts of android:**
+1. Notifications (creating channels for them and using them in service)
+2. MVVM pattern (i didnt use viewmodels in right places in prev projects)
+3. A bit of design (that floating button)
