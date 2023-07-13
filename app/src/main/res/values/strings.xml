@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ReminderListApp</string>
+    <string name="notification_channel_alarm">notification_channel_alarm</string>
 </resources>
