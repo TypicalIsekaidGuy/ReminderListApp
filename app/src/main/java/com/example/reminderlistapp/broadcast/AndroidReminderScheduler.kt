@@ -25,7 +25,7 @@ class AndroidReminderScheduler(
         }
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            time * 1000,
+            System.currentTimeMillis() + (time * 1000),
             PendingIntent.getBroadcast(
                 context,
                 item.hashCode(),

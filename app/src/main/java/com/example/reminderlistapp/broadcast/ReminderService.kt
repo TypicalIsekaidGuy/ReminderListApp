@@ -15,24 +15,11 @@ import com.example.reminderlistapp.R
 class ReminderService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createNotificationChannel()
-        Log.d("YES","HELLO")
         val message = intent?.getStringExtra("EXTRA_MESSAGE")
         val notification = createNotification(message!!)
-        Log.d("s",isNotificationChannelExists(0.toString(),this).toString())
-        val notif = NotificationCompat.Builder(this, 0.toString())
-            .setSmallIcon(R.drawable.ic_launcher_background)
-            .setContentTitle("Alarm!")
-            .setContentText("$message")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            // Set the intent that will fire when the user taps the notification
-            .setAutoCancel(true)
-        val notificationManager: NotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        notificationManager.notify(notif.hashCode(),notif.build())
         with(NotificationManagerCompat.from(this)) {
             // notificationId is a unique int for each notification that you must define
-            notify(notif.hashCode(), notif.build())
+            notify(notification.hashCode(), notification.build())
         }
         stopSelf()
 

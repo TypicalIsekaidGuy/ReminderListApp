@@ -23,6 +23,7 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -84,6 +85,7 @@ fun AddReminderDialog(
                 }
             }
 
+            val now = remember {mutableStateOf(LocalDateTime.now().plus(Duration.ofMinutes(1)))}
             MaterialDialog(
                 dialogState = dateDialogState,
                 buttons = {
@@ -94,7 +96,8 @@ fun AddReminderDialog(
             ) {
                 datepicker(
                     initialDate = pickedDate,
-                    title = "Pick a date"
+                    title = "Pick a date",
+                    allowedDateValidator = {it>now.value.toLocalDate()}
                 ) {
                     pickedDate = it
                     onEvent(ReminderEvent.SetTime(it.atTime(pickedTime)))
@@ -110,7 +113,8 @@ fun AddReminderDialog(
             ) {
                 timepicker(
                     initialTime = pickedTime,
-                    title = "Pick a time"
+                    title = "Pick a time",
+                    timeRange = if(pickedDate== LocalDate.now()) now.value.toLocalTime()..LocalTime.MAX else LocalTime.MIN..LocalTime.MAX
                 ) {
                     pickedTime = it
                     onEvent(ReminderEvent.SetTime(pickedDate.atTime(it)))
