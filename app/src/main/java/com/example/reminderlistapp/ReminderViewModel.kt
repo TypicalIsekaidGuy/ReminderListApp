@@ -1,18 +1,31 @@
 package com.example.reminderlistapp
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.reminderlistapp.broadcast.AndroidReminderScheduler
 import com.example.reminderlistapp.data.reminder.Reminder
 import com.example.reminderlistapp.data.reminder.ReminderDao
+import com.example.reminderlistapp.model.ReminderEvent
+import com.example.reminderlistapp.model.ReminderState
+import com.example.reminderlistapp.model.SortType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReminderViewModel(
-    private val dao: ReminderDao
+    private val dao: ReminderDao,
+    private val scheduler: AndroidReminderScheduler,
+    private val hasNotificationPermission: MutableState<Boolean>
 ): ViewModel() {
 
+    val canUseNotifications = hasNotificationPermission
     private val _sortType = MutableStateFlow(SortType.TITLE)
     private val _reminders = _sortType
         .flatMapLatest { sortType ->
@@ -47,7 +60,7 @@ class ReminderViewModel(
                 val title = state.value.title
                 val time = state.value.time
 
-                if(title.isBlank() || time<1) {
+                if(title.isBlank()) {
                     return
                 }
 
@@ -61,8 +74,10 @@ class ReminderViewModel(
                 _state.update { it.copy(
                     isAddingContact = false,
                     title = "",
-                    time = 100
+                    time = LocalDateTime.now()
                 ) }
+                
+                scheduler.schedule(reminder)
             }
             is ReminderEvent.SetTitle -> {
                 _state.update { it.copy(

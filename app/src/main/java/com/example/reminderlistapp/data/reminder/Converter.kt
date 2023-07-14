@@ -1,21 +1,22 @@
 package com.example.reminderlistapp.data.reminder
 
 import androidx.room.TypeConverter
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.*
 import java.util.*
 
 class Converter {
 
     @TypeConverter
     fun fromTimestamp(value: Long): LocalDateTime {
-        return value.let {         LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(it),
-            TimeZone.getDefault().toZoneId());   }
+        return value.let {
+            val currentDateTime = LocalDateTime.now()
+            val instant = currentDateTime.atZone(ZoneId.systemDefault()).toInstant()
+            val newInstant = Instant.ofEpochSecond(instant.epochSecond + value)
+            return LocalDateTime.ofInstant(newInstant, ZoneId.systemDefault())
+        }
     }
     @TypeConverter
     fun dateToTimestamp(time: LocalDateTime): Long {
-        return time.toEpochSecond(ZoneOffset.UTC)
+        return Duration.between(LocalDateTime.now(), time).seconds
     }
 }

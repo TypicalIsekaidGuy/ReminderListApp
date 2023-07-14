@@ -20,8 +20,10 @@ class ReminderApplication: Application() {
             val importance = NotificationManager.IMPORTANCE_HIGH
             val mChannel = NotificationChannel(0.toString(), name, importance)
             // Register the channel with the system. You can't change the importance
-            // or other notification behaviors after this.
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            // or other notification behaviors after this
+
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
         }
     }

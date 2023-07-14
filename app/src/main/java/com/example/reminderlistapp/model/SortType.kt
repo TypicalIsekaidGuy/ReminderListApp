@@ -1,4 +1,4 @@
-package com.example.reminderlistapp
+package com.example.reminderlistapp.model
 
 enum class SortType {
     TITLE,

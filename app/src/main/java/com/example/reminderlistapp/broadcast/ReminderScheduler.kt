@@ -1,4 +1,4 @@
-package com.example.reminderlistapp
+package com.example.reminderlistapp.broadcast
 
 import com.example.reminderlistapp.data.reminder.Reminder
 
